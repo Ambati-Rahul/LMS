@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-book"></i>
+                    <span>Library Management System</span>
+                </div>
+                <div class="nav-menu" id="navMenu">
+                    <a href="#" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="nav-link" data-section="books">
+                        <i class="fas fa-book"></i>
+                        Books
+                    </a>
+                    <a href="#" class="nav-link" data-section="authors">
+                        <i class="fas fa-user-edit"></i>
+                        Authors
+                    </a>
+                    <a href="#" class="nav-link" data-section="categories">
+                        <i class="fas fa-tags"></i>
+                        Categories
+                    </a>
+                    <a href="#" class="nav-link" data-section="publishers">
+                        <i class="fas fa-building"></i>
+                        Publishers
+                    </a>
+                </div>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome to your Library Management System</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon books">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalBooks">0</h3>
+                            <p>Total Books</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon authors">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalAuthors">0</h3>
+                            <p>Authors</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon categories">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalCategories">0</h3>
+                            <p>Categories</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon publishers">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalPublishers">0</h3>
+                            <p>Publishers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list" id="activityList">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Books Section -->
+            <section id="books" class="content-section">
+                <div class="section-header">
+                    <h1>Books Management</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="bookSearch" placeholder="Search books...">
+                        </div>
+                        <button class="btn btn-primary" id="addBookBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Book
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="booksTable">
+                        <thead>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Publisher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTableBody">
+                            <!-- Books will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="booksPagination">
+                    <!-- Pagination will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Authors Section -->
+            <section id="authors" class="content-section">
+                <div class="section-header">
+                    <h1>Authors Management</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="authorSearch" placeholder="Search authors...">
+                        </div>
+                        <button class="btn btn-primary" id="addAuthorBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Author
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="authorsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Books Count</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="authorsTableBody">
+                            <!-- Authors will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section id="categories" class="content-section">
+                <div class="section-header">
+                    <h1>Categories Management</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addCategoryBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Category
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cards-grid" id="categoriesGrid">
+                    <!-- Categories will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Publishers Section -->
+            <section id="publishers" class="content-section">
+                <div class="section-header">
+                    <h1>Publishers Management</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addPublisherBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Publisher
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cards-grid" id="publishersGrid">
+                    <!-- Publishers will be populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Add/Edit Forms -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Item</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Form content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="src/js/main.js"></script>
+</body>
+</html>
