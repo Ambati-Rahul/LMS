@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Management System</title>
+    <title>SmartReads - Library Management System</title>
     <link rel="stylesheet" href="src/styles/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -13,8 +13,8 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-brand">
-                    <i class="fas fa-book"></i>
-                    <span>Library Management System</span>
+                    <i class="fas fa-book-reader"></i>
+                    <span>SmartReads</span>
                 </div>
                 <div class="nav-menu" id="navMenu">
                     <a href="#" class="nav-link active" data-section="dashboard">
@@ -38,6 +38,15 @@
                         Publishers
                     </a>
                 </div>
+                <div class="nav-user">
+                    <div class="user-info" id="userInfo">
+                        <span class="user-name" id="userName">Admin User</span>
+                        <span class="user-role" id="userRole">Administrator</span>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
                 <div class="nav-toggle" id="navToggle">
                     <span></span>
                     <span></span>
@@ -51,8 +60,16 @@
             <!-- Dashboard Section -->
             <section id="dashboard" class="content-section active">
                 <div class="section-header">
-                    <h1>Dashboard</h1>
-                    <p>Welcome to your Library Management System</p>
+                    <div>
+                        <h1>Welcome to SmartReads</h1>
+                        <p>Your intelligent library management system</p>
+                    </div>
+                    <div class="welcome-actions">
+                        <button class="btn btn-primary" id="quickAddBtn">
+                            <i class="fas fa-plus"></i>
+                            Quick Add Book
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="stats-grid">

@@ -1,8 +1,9 @@
-// Library Management System - Frontend JavaScript
+// SmartReads - Library Management System Frontend
 
-class LibraryManagementSystem {
+class SmartReadsSystem {
     constructor() {
         this.currentSection = 'dashboard';
+        this.currentUser = null;
         this.data = {
             books: [],
             authors: [],
@@ -13,10 +14,43 @@ class LibraryManagementSystem {
     }
 
     init() {
+        this.checkAuthentication();
         this.setupEventListeners();
         this.loadSampleData();
         this.updateDashboard();
         this.showSection('dashboard');
+        this.updateUserInfo();
+    }
+
+    checkAuthentication() {
+        const user = localStorage.getItem('smartreads_user');
+        if (!user) {
+            window.location.href = 'auth.html';
+            return;
+        }
+
+        this.currentUser = JSON.parse(user);
+        
+        // Check if session is still valid (24 hours)
+        const loginTime = new Date(this.currentUser.loginTime);
+        const now = new Date();
+        const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+        
+        if (hoursSinceLogin > 24) {
+            localStorage.removeItem('smartreads_user');
+            window.location.href = 'auth.html';
+            return;
+        }
+    }
+
+    updateUserInfo() {
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        
+        if (this.currentUser) {
+            userName.textContent = this.currentUser.role === 'admin' ? 'Admin User' : 'Library User';
+            userRole.textContent = this.currentUser.role === 'admin' ? 'Administrator' : 'User';
+        }
     }
 
     setupEventListeners() {
@@ -36,6 +70,11 @@ class LibraryManagementSystem {
             navMenu.classList.toggle('active');
         });
 
+        // Logout button
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            this.handleLogout();
+        });
+
         // Modal controls
         const modal = document.getElementById('modal');
         const modalClose = document.getElementById('modalClose');
@@ -45,6 +84,7 @@ class LibraryManagementSystem {
         });
 
         // Add buttons
+        document.getElementById('quickAddBtn').addEventListener('click', () => this.showAddBookForm());
         document.getElementById('addBookBtn').addEventListener('click', () => this.showAddBookForm());
         document.getElementById('addAuthorBtn').addEventListener('click', () => this.showAddAuthorForm());
         document.getElementById('addCategoryBtn').addEventListener('click', () => this.showAddCategoryForm());
@@ -57,6 +97,16 @@ class LibraryManagementSystem {
         document.getElementById('authorSearch').addEventListener('input', (e) => {
             this.searchAuthors(e.target.value);
         });
+    }
+
+    handleLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('smartreads_user');
+            this.showToast('Logged out successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'auth.html';
+            }, 1000);
+        }
     }
 
     showSection(sectionName) {
@@ -92,54 +142,67 @@ class LibraryManagementSystem {
     }
 
     loadSampleData() {
-        // Sample data to demonstrate functionality
+        // Enhanced sample data for SmartReads
         this.data = {
             books: [
                 {
                     id: 1,
-                    isbn: 'AP1287',
-                    name: 'Spring in Action',
-                    serialName: 'CXEF12389',
-                    description: 'Comprehensive guide to Spring Framework',
-                    authors: [{ id: 1, name: 'Matt' }],
+                    isbn: 'SR001',
+                    name: 'The Art of Clean Code',
+                    serialName: 'ACC2024',
+                    description: 'A comprehensive guide to writing maintainable and elegant code',
+                    authors: [{ id: 1, name: 'Robert C. Martin' }],
                     categories: [{ id: 1, name: 'Programming' }],
-                    publishers: [{ id: 1, name: 'Manning Publications' }]
+                    publishers: [{ id: 1, name: 'Prentice Hall' }]
                 },
                 {
                     id: 2,
-                    isbn: 'BP567#R',
-                    name: 'Spring Microservices',
-                    serialName: 'KCXEF12389',
-                    description: 'Building microservices with Spring Boot',
-                    authors: [{ id: 2, name: 'Maxwell' }],
-                    categories: [{ id: 2, name: 'Architecture' }],
-                    publishers: [{ id: 2, name: 'O\'Reilly Media' }]
+                    isbn: 'SR002',
+                    name: 'Machine Learning Fundamentals',
+                    serialName: 'MLF2024',
+                    description: 'Introduction to machine learning concepts and algorithms',
+                    authors: [{ id: 2, name: 'Andrew Ng' }],
+                    categories: [{ id: 2, name: 'Data Science' }],
+                    publishers: [{ id: 2, name: 'MIT Press' }]
                 },
                 {
                     id: 3,
-                    isbn: 'GH67F#',
-                    name: 'Spring Boot',
-                    serialName: 'UV#JH',
-                    description: 'Modern Spring Boot development',
-                    authors: [{ id: 3, name: 'Josh Lang' }],
-                    categories: [{ id: 1, name: 'Programming' }],
-                    publishers: [{ id: 3, name: 'Packt Publishing' }]
+                    isbn: 'SR003',
+                    name: 'Digital Transformation',
+                    serialName: 'DT2024',
+                    description: 'How technology is reshaping business and society',
+                    authors: [{ id: 3, name: 'Satya Nadella' }],
+                    categories: [{ id: 3, name: 'Business' }],
+                    publishers: [{ id: 3, name: 'Harvard Business Review Press' }]
+                },
+                {
+                    id: 4,
+                    isbn: 'SR004',
+                    name: 'Quantum Computing Explained',
+                    serialName: 'QCE2024',
+                    description: 'Understanding the future of computing technology',
+                    authors: [{ id: 4, name: 'John Preskill' }],
+                    categories: [{ id: 4, name: 'Technology' }],
+                    publishers: [{ id: 4, name: 'Academic Press' }]
                 }
             ],
             authors: [
-                { id: 1, name: 'Matt', description: 'Spring Framework expert', booksCount: 1 },
-                { id: 2, name: 'Maxwell', description: 'Microservices architect', booksCount: 1 },
-                { id: 3, name: 'Josh Lang', description: 'Spring Boot specialist', booksCount: 1 }
+                { id: 1, name: 'Robert C. Martin', description: 'Software craftsman and clean code advocate', booksCount: 1 },
+                { id: 2, name: 'Andrew Ng', description: 'AI researcher and educator', booksCount: 1 },
+                { id: 3, name: 'Satya Nadella', description: 'CEO of Microsoft and technology leader', booksCount: 1 },
+                { id: 4, name: 'John Preskill', description: 'Quantum physicist and researcher', booksCount: 1 }
             ],
             categories: [
-                { id: 1, name: 'Programming', booksCount: 2 },
-                { id: 2, name: 'Architecture', booksCount: 1 },
-                { id: 3, name: 'Web Development', booksCount: 0 }
+                { id: 1, name: 'Programming', booksCount: 1 },
+                { id: 2, name: 'Data Science', booksCount: 1 },
+                { id: 3, name: 'Business', booksCount: 1 },
+                { id: 4, name: 'Technology', booksCount: 1 }
             ],
             publishers: [
-                { id: 1, name: 'Manning Publications', booksCount: 1 },
-                { id: 2, name: 'O\'Reilly Media', booksCount: 1 },
-                { id: 3, name: 'Packt Publishing', booksCount: 1 }
+                { id: 1, name: 'Prentice Hall', booksCount: 1 },
+                { id: 2, name: 'MIT Press', booksCount: 1 },
+                { id: 3, name: 'Harvard Business Review Press', booksCount: 1 },
+                { id: 4, name: 'Academic Press', booksCount: 1 }
             ]
         };
     }
@@ -156,10 +219,10 @@ class LibraryManagementSystem {
     renderRecentActivity() {
         const activityList = document.getElementById('activityList');
         const activities = [
-            { icon: 'fas fa-plus', title: 'New book added', description: 'Spring Boot was added to the library', time: '2 hours ago' },
-            { icon: 'fas fa-edit', title: 'Author updated', description: 'Josh Lang\'s information was updated', time: '4 hours ago' },
-            { icon: 'fas fa-trash', title: 'Category removed', description: 'Outdated category was removed', time: '1 day ago' },
-            { icon: 'fas fa-book', title: 'Book borrowed', description: 'Spring in Action was borrowed', time: '2 days ago' }
+            { icon: 'fas fa-plus', title: 'New book added', description: 'Quantum Computing Explained was added to the library', time: '1 hour ago' },
+            { icon: 'fas fa-edit', title: 'Author updated', description: 'John Preskill\'s information was updated', time: '3 hours ago' },
+            { icon: 'fas fa-book', title: 'Book borrowed', description: 'The Art of Clean Code was borrowed', time: '5 hours ago' },
+            { icon: 'fas fa-user-plus', title: 'New user registered', description: 'A new user joined SmartReads', time: '1 day ago' }
         ];
 
         activityList.innerHTML = activities.map(activity => `
@@ -186,13 +249,13 @@ class LibraryManagementSystem {
                 <td>${book.publishers.map(p => p.name).join(', ')}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="action-btn view-btn" onclick="librarySystem.viewBook(${book.id})" title="View">
+                        <button class="action-btn view-btn" onclick="smartReads.viewBook(${book.id})" title="View">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="action-btn edit-btn" onclick="librarySystem.editBook(${book.id})" title="Edit">
+                        <button class="action-btn edit-btn" onclick="smartReads.editBook(${book.id})" title="Edit">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="action-btn delete-btn" onclick="librarySystem.deleteBook(${book.id})" title="Delete">
+                        <button class="action-btn delete-btn" onclick="smartReads.deleteBook(${book.id})" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -210,10 +273,10 @@ class LibraryManagementSystem {
                 <td>${author.booksCount}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="action-btn edit-btn" onclick="librarySystem.editAuthor(${author.id})" title="Edit">
+                        <button class="action-btn edit-btn" onclick="smartReads.editAuthor(${author.id})" title="Edit">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="action-btn delete-btn" onclick="librarySystem.deleteAuthor(${author.id})" title="Delete">
+                        <button class="action-btn delete-btn" onclick="smartReads.deleteAuthor(${author.id})" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -229,10 +292,10 @@ class LibraryManagementSystem {
                 <div class="card-header">
                     <h3 class="card-title">${category.name}</h3>
                     <div class="card-actions">
-                        <button class="action-btn edit-btn" onclick="librarySystem.editCategory(${category.id})" title="Edit">
+                        <button class="action-btn edit-btn" onclick="smartReads.editCategory(${category.id})" title="Edit">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="action-btn delete-btn" onclick="librarySystem.deleteCategory(${category.id})" title="Delete">
+                        <button class="action-btn delete-btn" onclick="smartReads.deleteCategory(${category.id})" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -252,10 +315,10 @@ class LibraryManagementSystem {
                 <div class="card-header">
                     <h3 class="card-title">${publisher.name}</h3>
                     <div class="card-actions">
-                        <button class="action-btn edit-btn" onclick="librarySystem.editPublisher(${publisher.id})" title="Edit">
+                        <button class="action-btn edit-btn" onclick="smartReads.editPublisher(${publisher.id})" title="Edit">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="action-btn delete-btn" onclick="librarySystem.deletePublisher(${publisher.id})" title="Delete">
+                        <button class="action-btn delete-btn" onclick="smartReads.deletePublisher(${publisher.id})" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -321,7 +384,7 @@ class LibraryManagementSystem {
                     </select>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Book</button>
                 </div>
             </form>
@@ -347,7 +410,7 @@ class LibraryManagementSystem {
                     <textarea class="form-textarea" name="description" required></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Author</button>
                 </div>
             </form>
@@ -369,7 +432,7 @@ class LibraryManagementSystem {
                     <input type="text" class="form-input" name="name" required>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Category</button>
                 </div>
             </form>
@@ -391,7 +454,7 @@ class LibraryManagementSystem {
                     <input type="text" class="form-input" name="name" required>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Publisher</button>
                 </div>
             </form>
@@ -547,7 +610,7 @@ class LibraryManagementSystem {
                     <textarea class="form-textarea" name="description" required>${book.description}</textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update Book</button>
                 </div>
             </form>
@@ -624,7 +687,7 @@ class LibraryManagementSystem {
                     <textarea class="form-textarea" name="description" required>${author.description}</textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update Author</button>
                 </div>
             </form>
@@ -679,7 +742,7 @@ class LibraryManagementSystem {
                     <input type="text" class="form-input" name="name" value="${category.name}" required>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update Category</button>
                 </div>
             </form>
@@ -733,7 +796,7 @@ class LibraryManagementSystem {
                     <input type="text" class="form-input" name="name" value="${publisher.name}" required>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="librarySystem.closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="smartReads.closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update Publisher</button>
                 </div>
             </form>
@@ -793,13 +856,13 @@ class LibraryManagementSystem {
                 <td>${book.publishers.map(p => p.name).join(', ')}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="action-btn view-btn" onclick="librarySystem.viewBook(${book.id})" title="View">
+                        <button class="action-btn view-btn" onclick="smartReads.viewBook(${book.id})" title="View">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="action-btn edit-btn" onclick="librarySystem.editBook(${book.id})" title="Edit">
+                        <button class="action-btn edit-btn" onclick="smartReads.editBook(${book.id})" title="Edit">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="action-btn delete-btn" onclick="librarySystem.deleteBook(${book.id})" title="Delete">
+                        <button class="action-btn delete-btn" onclick="smartReads.deleteBook(${book.id})" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -822,10 +885,10 @@ class LibraryManagementSystem {
                 <td>${author.booksCount}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="action-btn edit-btn" onclick="librarySystem.editAuthor(${author.id})" title="Edit">
+                        <button class="action-btn edit-btn" onclick="smartReads.editAuthor(${author.id})" title="Edit">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="action-btn delete-btn" onclick="librarySystem.deleteAuthor(${author.id})" title="Delete">
+                        <button class="action-btn delete-btn" onclick="smartReads.deleteAuthor(${author.id})" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -859,4 +922,4 @@ class LibraryManagementSystem {
 }
 
 // Initialize the application
-const librarySystem = new LibraryManagementSystem();
+const smartReads = new SmartReadsSystem();

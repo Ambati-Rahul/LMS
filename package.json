@@ -1,7 +1,7 @@
 {
-  "name": "library-management-frontend",
+  "name": "smartreads",
   "version": "1.0.0",
-  "description": "Modern frontend for Library Management System",
+  "description": "SmartReads - Modern Library Management System",
   "main": "index.html",
   "scripts": {
     "dev": "vite",
